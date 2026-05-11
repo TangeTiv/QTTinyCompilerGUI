@@ -1,0 +1,33 @@
+{ Test program for TINY extended language }
+{ Covers: for, while, ++, --, %, ^, <=, >=, <>, ::=, |, &, # }
+
+read x;
+read y;
+
+{ 1. for-loop with prefix decrement }
+for( count := 10; count >= 0; --count)
+  write count;
+
+{ 2. while-loop with prefix increment }
+while(x <= 100)
+  ++x;
+  write x
+endwhile;
+
+{ 3. modulo (%) and power (^) operators }
+result := x % 3;
+write result;
+powresult := result ^ 2;
+write powresult;
+
+{ 4. regex assignment with ::= }
+pattern ::= a | b & c # & d;
+
+{ 5. <> comparison and nested if }
+if x <> 0 then
+  if result > 5 then
+    write result
+  else
+    write x
+  end
+end

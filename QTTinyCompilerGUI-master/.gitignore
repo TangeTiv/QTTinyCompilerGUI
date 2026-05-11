@@ -1,0 +1,12 @@
+# Build directory
+build/
+*.pro.user
+*.o
+*.obj
+*.exe
+*.app
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+Makefile
+Makefile.*
