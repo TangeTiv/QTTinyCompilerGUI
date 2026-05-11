@@ -3,10 +3,14 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include "globals.h"
+#include <iostream>
+
+
 
 int lineno = 0;                  // 当前行号，从 0 开始
 std::ifstream* source = nullptr; // 源代码输入文件流
-std::ostream*  listing = nullptr;// 列表输出流（通常指向 std::cout）
+std::ostream* listing = &std::cout;// 列表输出流（通常指向 std::cout）
 std::ofstream* code = nullptr;   // TM 代码输出文件流
 
 /* 跟踪调试标志（默认全部关闭） */
@@ -17,7 +21,7 @@ int TraceAnalyze = FALSE;   // 是否跟踪语义分析过程
 int TraceCode    = FALSE;   // 是否在代码中写入注释
 
 int Error = FALSE;          // 错误标志，发生错误时阻止后续阶段
-
+QStringList errorMessages;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

@@ -7,7 +7,7 @@
 #include <QDir>
 #include "parser.h"
 #include <fstream>
-#include <sstream>  // 引入字符串流
+#include "scanner.h"
 
 extern std::ifstream* source; // 如果你的 globals.h 里改成了 std::ifstream，请告诉我，我给你换写法。这里假设还是 FILE*
 extern int lineno;
@@ -54,48 +54,49 @@ MainWindow::MainWindow(QWidget *parent)
             out << ui->codeEditor->toPlainText();
             file.close();
         }
+
+        // 2. 清理旧的文件流内存
         if (source != nullptr) {
-            if (source->is_open()) {
-                source->close();
-            }
-            delete source; // 释放上一轮分配的旧内存，防止内存泄漏
+            if (source->is_open()) source->close();
+            delete source;
         }
 
-        // 【修复】重新用 new 为指针分配一个实际的文件流对象，并传入文件路径
+        // 🌟 修复关键点：直接 new，绝对不要再调用 source->open()！
         source = new std::ifstream(fileName.toStdString());
-        // 2. 对接编译器底层的全局 std::ifstream source
-        // 如果流已经打开，先关闭它
-        if (source->is_open()) {
-            source->close();
-        }
-
-        // 极其重要：在重新打开前清除流的状态位（如 eofbit, failbit）
-        source->clear();
-
-        // 打开临时文件
-        source->open(fileName.toStdString());
 
         if (!source->is_open()) {
             QMessageBox::critical(this, "错误", "无法打开输入流进行语法分析！");
             return;
         }
 
-        // 3. 重置编译器状态并执行
-        lineno = 1;   // 重置行号
-        Error = FALSE; // 重置错误标志
+        // 3. 编译前：重置所有状态
+        lineno = 0;
+        Error = FALSE;
+        errorMessages.clear();
         ui->treeWidget->clear();
+        ui->errorListWidget->clear();
 
+        // 🌟 重置词法分析器，防止第二次点击报错
+        resetScanner();
 
-        // 调用解析器入口
+        // 4. 调用解析器入口
         TreeNode* root = parse();
-
-        // 解析完成后关闭流
         source->close();
 
-        // 4. 显示结果
-        if (root != nullptr && !Error) {
+        // 5. 编译后：渲染错误栏或语法树
+        if (Error || !errorMessages.isEmpty()) {
+            ui->treeWidget->clear();
+            for (const QString& err : errorMessages) {
+                QListWidgetItem *item = new QListWidgetItem(err);
+                item->setForeground(Qt::red);
+                ui->errorListWidget->addItem(item);
+            }
+        } else if (root != nullptr) {
             displayTree(root, ui->treeWidget->invisibleRootItem());
             ui->treeWidget->expandAll();
+            QListWidgetItem *item = new QListWidgetItem("编译成功！语法树已生成。");
+            item->setForeground(Qt::darkGreen);
+            ui->errorListWidget->addItem(item);
         }
     });
 

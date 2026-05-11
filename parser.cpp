@@ -78,11 +78,17 @@ static TreeNode* power(void);
  * ================================================================ */
 static void syntaxError(const char* message)
 {
-    *listing << "\n>>> ";
-    *listing << "语法错误，行 " << lineno << "：" << message;
+    // 加上 if (listing) 保护起来
+    if (listing != nullptr) {
+        *listing << "\n>>> ";
+        *listing << "语法错误，行 " << lineno << "：" << message;
+    }
+
+    QString errStr = QString("语法错误 (第 %1 行): %2").arg(lineno).arg(message);
+    errorMessages.append(errStr);
+
     Error = TRUE;
 }
-TokenType *TK = &token;
 /* ================================================================
  * match : 匹配当前词法单元
  *
@@ -100,8 +106,14 @@ static void match(TokenType expected)
         token = getToken();
     else
     {
-        syntaxError("不期望的词法单元 -> ");
-        printToken(token, tokenString);
+        // 原本的代码：
+        // syntaxError("不期望的词法单元 -> ");
+        // printToken(token, tokenString);
+
+        // 🌟 优化后的代码：将具体词素拼接到错误信息中
+        QString detailMsg = QString("不期望的词法单元 -> '%1'").arg(tokenString);
+        syntaxError(detailMsg.toUtf8().constData());
+
         *listing << "      ";
     }
 }

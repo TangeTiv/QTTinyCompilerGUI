@@ -95,11 +95,11 @@ static int getNextChar(void)
 {
     if (!(linepos < bufsize))
     {
-        // 当前缓冲区已读完，读取新的一行
-        lineno++;
+        // 当前缓冲区已读完，尝试读取新的一行
         if (myFgets(lineBuf, BUFLEN, source))
         {
-            bufsize = strlen(lineBuf);   // 实际读取的字符数（含换行符）
+            lineno++; // 🌟 修复：只有真正成功读到了新的一行代码，行号才 +1
+            bufsize = strlen(lineBuf);
             if (EchoSource)
                 *listing << lineno << ": " << lineBuf;
             linepos = 0;
@@ -107,7 +107,7 @@ static int getNextChar(void)
         }
         else
         {
-            // 读取失败，说明已到文件末尾
+            // 读取失败，说明已到文件末尾（此时 lineno 不会盲目增加）
             EOF_flag = TRUE;
             return EOF;
         }
@@ -245,8 +245,8 @@ TokenType getToken(void)
                     state = INMINUS;// 遇到 '-' → 可能是 --, -
                 else if (c == ':')
                     state = INASSIGN;       // 遇到冒号 → 可能是赋值运算符
-                else if (c == ' ' || c == '\t' || c == '\n')
-                    save = FALSE;           // 空白字符 → 不保存，继续
+                else if (isspace(c))
+                    save = FALSE;           // 🌟 兼容 \r \n \t 空格等所有标准空白符
                 else if (c == '{')
                 {
                     save = FALSE;           // 注释开始 → 不保存
@@ -429,4 +429,11 @@ TokenType getToken(void)
     }
 
     return currentToken;
+}
+
+void resetScanner(void)
+{
+    linepos = 0;
+    bufsize = 0;
+    EOF_flag = FALSE;
 }

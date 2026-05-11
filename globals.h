@@ -13,6 +13,7 @@
 #include <iostream>   // C++ 标准输入输出流
 #include <fstream>    // C++ 文件输入输出流
 #include <string>     // C++ 字符串类
+#include <QStringList>
 #include <cstdlib>    // C 标准库（malloc, free, atoi 等）
 #include <cctype>     // 字符处理函数（isdigit, isalpha 等）
 #include <cstring>    // C 字符串函数（strcmp, strcpy 等）
@@ -55,7 +56,7 @@ typedef enum
 extern std::ifstream* source;   // 源代码文本文件
 extern std::ostream*  listing;  // 列表输出文本文件（通常为 stdout）
 extern std::ofstream* code;     // TM 模拟器代码文本文件
-
+extern QStringList errorMessages;
 extern int lineno;              // 源代码当前行号（用于列表输出）
 
 /**************************************************/

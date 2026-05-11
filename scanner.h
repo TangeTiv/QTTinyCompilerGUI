@@ -20,5 +20,5 @@ extern char tokenString[MAXTOKENLEN + 1];
  * 词素文本存储在全局变量 tokenString 中
  */
 TokenType getToken(void);
-
+void resetScanner(void);
 #endif

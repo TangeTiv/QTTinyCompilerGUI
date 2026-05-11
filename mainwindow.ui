@@ -14,16 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableView" name="tableView">
-    <property name="geometry">
-     <rect>
-      <x>5</x>
-      <y>431</y>
-      <width>761</width>
-      <height>201</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QSplitter" name="splitter">
     <property name="geometry">
      <rect>
@@ -81,6 +71,16 @@
       </widget>
      </widget>
     </widget>
+   </widget>
+   <widget class="QListWidget" name="errorListWidget">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>421</y>
+      <width>691</width>
+      <height>221</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
