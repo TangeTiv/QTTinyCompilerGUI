@@ -8,11 +8,13 @@
 
 #ifndef _PARSE_H_
 #define _PARSE_H_
-
+#include "globals.h"
 /* parse : 对源代码进行语法分析，构建语法树
  * 返回值：指向新构建的语法树根节点的指针
  * 采用递归下降分析法（Recursive Descent Parsing）
  */
 TreeNode* parse(void);
+
+
 
 #endif

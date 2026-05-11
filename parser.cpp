@@ -82,7 +82,7 @@ static void syntaxError(const char* message)
     *listing << "语法错误，行 " << lineno << "：" << message;
     Error = TRUE;
 }
-
+TokenType *TK = &token;
 /* ================================================================
  * match : 匹配当前词法单元
  *
