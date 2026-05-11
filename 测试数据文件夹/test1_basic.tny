@@ -1,0 +1,5 @@
+{ Basic TINY program: read and write }
+read x;
+read y;
+z := x + y;
+write z

@@ -1,0 +1,8 @@
+{ Test extended operators: %, ^, <=, >=, <> }
+read x;
+read y;
+mod := x % 3;
+pow := mod ^ 2;
+if x <> 0 then
+  write pow
+end

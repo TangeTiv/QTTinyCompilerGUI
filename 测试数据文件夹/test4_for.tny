@@ -1,0 +1,3 @@
+{ Test for loop with ++ }
+for(i := 0; i < 10; ++i)
+  write i

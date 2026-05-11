@@ -1,0 +1,6 @@
+{ Test while loop }
+x := 0;
+while x <= 5 do
+  write x;
+  x := x + 1
+endwhile
